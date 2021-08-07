@@ -49,7 +49,7 @@ public class AetherRankings implements IAetherRankings
 
     @Override
     public void onUpdate() {
-        Aether.LOGGER.info(this.areHatGloves());
+        //Aether.LOGGER.info(this.areHatGloves());
         //Aether.LOGGER.info(AetherPlayerRankings.getPrimaryRankOf(this.getPlayer().getUUID()));
     }
 

@@ -22,9 +22,9 @@ public class RepulsionShieldLayer<T extends LivingEntity, M extends BipedModel<T
 {
     private final A shieldModel;
 
-    public RepulsionShieldLayer(IEntityRenderer<T, M> renderer, A glovesModel) {
+    public RepulsionShieldLayer(IEntityRenderer<T, M> renderer, A shieldModel) {
         super(renderer);
-        this.shieldModel = glovesModel;
+        this.shieldModel = shieldModel;
     }
 
     @Override

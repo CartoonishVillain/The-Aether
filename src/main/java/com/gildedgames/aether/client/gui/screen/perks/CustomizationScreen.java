@@ -33,7 +33,7 @@ public class CustomizationScreen extends Screen
         }
 
 
-
+        //Might move this up a bit depending on spacing.
         this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, DialogTexts.GUI_DONE, (pressed) -> this.minecraft.setScreen(this.lastScreen)));
     }
 

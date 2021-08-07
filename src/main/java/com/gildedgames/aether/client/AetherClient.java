@@ -3,6 +3,7 @@ package com.gildedgames.aether.client;
 import com.gildedgames.aether.client.registry.AetherAtlases;
 import com.gildedgames.aether.client.registry.AetherKeys;
 import com.gildedgames.aether.client.renderer.accessory.layer.RepulsionShieldLayer;
+import com.gildedgames.aether.client.renderer.perk.layer.DevGlowLayer;
 import com.gildedgames.aether.client.world.AetherSkyRenderInfo;
 import com.gildedgames.aether.client.renderer.player.layer.EnchantedDartLayer;
 import com.gildedgames.aether.client.renderer.player.layer.GoldenDartLayer;
@@ -45,6 +46,7 @@ public class AetherClient
         event.enqueueWork(() -> {
             for (PlayerRenderer render : Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().values()) {
                 render.addLayer(new RepulsionShieldLayer<>(render, new BipedModel(1.1F)));
+                render.addLayer(new DevGlowLayer<>(render, new BipedModel(1.05F)));
                 render.addLayer(new GoldenDartLayer<>(render));
                 render.addLayer(new PoisonDartLayer<>(render));
                 render.addLayer(new EnchantedDartLayer<>(render));
