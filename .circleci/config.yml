@@ -7,10 +7,8 @@ parameters:
 
 jobs:
   build:
-    docker:
-      - image: cimg/openjdk:8.0.282
-    # machine:
-    #   image: ubuntu-2004:202104-01
+    machine:
+      image: ubuntu-2004:202104-01
 
     environment:
       JVM_OPTS: -Xmx3200m
@@ -18,20 +16,18 @@ jobs:
       GRADLE_OPTS: -Dorg.gradle.daemon=false
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - v3-dependencies-{{ checksum "build.gradle" }}
-      #       - v3-dependencies-
+      - restore_cache:
+          keys:
+            - v3-dependencies-{{ checksum "build.gradle" }}
+            - v3-dependencies-
 
-      # - run: gradle dependencies
-      # - save_cache:
-      #     paths:
-      #       - ~/repo/.gradle
-      #     key: v3-dependencies-{{ checksum "build.gradle" }}
-      # - run: gradle test
-      # - run: gradle build
-      - run: mkdir -p ~/project/build/libs
-      - run: echo "test" > ~/project/build/libs/<< pipeline.parameters.artifact-name >>-${CIRCLE_BRANCH}.jar
+      - run: gradle dependencies
+      - save_cache:
+          paths:
+            - ~/repo/.gradle
+          key: v3-dependencies-{{ checksum "build.gradle" }}
+      - run: gradle test
+      - run: gradle build
       - store_artifacts:
           path: ~/project/build/libs
       - persist_to_workspace:
@@ -84,26 +80,47 @@ jobs:
       - run:
           name: Reinstall and start server
           command: |
-            INSTANCE_NUMBER=6 # TODO: Create a way of selecting this from servers endpoint
+            SERVER_ID=9170ca89
+
+            UPDATE_RESPONSE=$(curl -X PUT -s -o /dev/null -w "%{http_code}" "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}/startup/variable" \
+                -H "Accept: application/json" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: Bearer ${USER_KEY}" \
+                -d '{ "key": "ARTIFACT_BUILD_NUM", "value": "'"${CIRCLE_PREVIOUS_BUILD_NUM}"'" }')
+
+            if [[ $UPDATE_RESPONSE == 200 ]]; then
+              echo "Updated server environment variable 'ARTIFACT_BUILD_NUM' with ${CIRCLE_PREVIOUS_BUILD_NUM}"
+            else 
+              echo "Error updating environment: ${UPDATE_RESPONSE}"
+              exit 1
+            fi
 
             REINSTALL_RESPONSE=$(curl -s -o /dev/null -I -X POST -w "%{http_code}" \
-            "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}/reinstall" \
-            -H "Authorization: Bearer ${DEPLOY_KEY}")
+            "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}/settings/reinstall" \
+            -H "Authorization: Bearer ${USER_KEY}")
             
-            if [[ $REINSTALL_RESPONSE == 204 ]]; then
+            if (( $REINSTALL_RESPONSE >= 200 )); then
+              echo "Server received reinstallation request."
+
+              if (( $REINSTALL_RESPONSE == 204 )); then
+                while [[ ! $(curl -s "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}" \
+                -H "Authorization: Bearer ${USER_KEY}" | jq '.attributes | .is_installing') ]]; 
+                do
+                  echo "Waiting for installation to begin..."
+                  sleep 2
+                done
+              fi
+
               echo "Server reinstallation has started."
               
-              while [[ $(curl -s "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}" \
-                -H "Authorization: Bearer ${DEPLOY_KEY}" | jq '.attributes | .status') != "null" ]]; 
+              while [[ $(curl -s "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}" \
+                -H "Authorization: Bearer ${USER_KEY}" | jq '.attributes | .is_installing') == true ]]; 
               do
                 echo "Waiting for installation..."
                 sleep 10
               done
 
               echo "Sending start signal to server."
-
-              SERVER_ID=$(curl -s "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}" \
-                -H "Authorization: Bearer ${DEPLOY_KEY}" | jq -r '.attributes | .identifier')
               
               START_RESPONSE=$(curl -X POST -s -o /dev/null -w "%{http_code}" "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}/power" \
                 -H "Accept: application/json" \
@@ -111,7 +128,7 @@ jobs:
                 -H "Authorization: Bearer ${USER_KEY}" \
                 -d '{ "signal": "start" }')
 
-              if [[ $START_RESPONSE == 204 ]]; then
+              if (( $START_RESPONSE == 204 )); then
                 echo "Server received start signal."
               else
                 echo "Server start unsucessful. Response: ${START_RESPONSE}"
