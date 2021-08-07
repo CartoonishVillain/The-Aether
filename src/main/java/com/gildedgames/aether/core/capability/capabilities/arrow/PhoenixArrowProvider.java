@@ -19,12 +19,12 @@ public class PhoenixArrowProvider implements ICapabilityProvider, INBTSerializab
 
     @Override
     public CompoundNBT serializeNBT() {
-        return phoenixArrow.serializeNBT();
+        return this.phoenixArrow.serializeNBT();
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        phoenixArrow.deserializeNBT(nbt);
+        this.phoenixArrow.deserializeNBT(nbt);
     }
 
     @SuppressWarnings("unchecked")

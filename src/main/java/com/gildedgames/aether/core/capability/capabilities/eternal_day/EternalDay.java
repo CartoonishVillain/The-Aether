@@ -1,6 +1,5 @@
 package com.gildedgames.aether.core.capability.capabilities.eternal_day;
 
-import com.gildedgames.aether.Aether;
 import com.gildedgames.aether.common.registry.AetherDimensions;
 import com.gildedgames.aether.core.AetherConfig;
 import com.gildedgames.aether.core.capability.interfaces.IEternalDay;

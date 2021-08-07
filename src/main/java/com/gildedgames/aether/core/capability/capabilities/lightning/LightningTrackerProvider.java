@@ -19,12 +19,12 @@ public class LightningTrackerProvider implements ICapabilityProvider, INBTSerial
 
     @Override
     public CompoundNBT serializeNBT() {
-        return lightningTracker.serializeNBT();
+        return this.lightningTracker.serializeNBT();
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        lightningTracker.deserializeNBT(nbt);
+        this.lightningTracker.deserializeNBT(nbt);
     }
 
     @SuppressWarnings("unchecked")

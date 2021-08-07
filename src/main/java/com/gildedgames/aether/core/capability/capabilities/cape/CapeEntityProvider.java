@@ -19,12 +19,12 @@ public class CapeEntityProvider implements ICapabilityProvider, INBTSerializable
 
     @Override
     public CompoundNBT serializeNBT() {
-        return capeEntity.serializeNBT();
+        return this.capeEntity.serializeNBT();
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        capeEntity.deserializeNBT(nbt);
+        this.capeEntity.deserializeNBT(nbt);
     }
 
     @SuppressWarnings("unchecked")

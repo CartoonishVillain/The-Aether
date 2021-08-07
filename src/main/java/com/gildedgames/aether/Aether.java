@@ -57,7 +57,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.SlotTypeMessage;
-import top.theillusivec4.curios.api.SlotTypePreset;
 
 import java.util.Random;
 
@@ -78,7 +77,7 @@ public class Aether
 		forgeBus.addListener(EventPriority.NORMAL, AetherStructures::addDimensionalSpacing);
 
 		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AetherClient::clientInitialization);
-		
+
 		DeferredRegister<?>[] registers = {
 				AetherBlocks.BLOCKS,
 				AetherEntityTypes.ENTITIES,

@@ -16,6 +16,9 @@ import com.gildedgames.aether.core.capability.capabilities.lightning.LightningTr
 import com.gildedgames.aether.core.capability.capabilities.player.AetherPlayer;
 import com.gildedgames.aether.core.capability.capabilities.player.AetherPlayerProvider;
 import com.gildedgames.aether.core.capability.capabilities.player.AetherPlayerStorage;
+import com.gildedgames.aether.core.capability.capabilities.rankings.AetherRankings;
+import com.gildedgames.aether.core.capability.capabilities.rankings.AetherRankingsProvider;
+import com.gildedgames.aether.core.capability.capabilities.rankings.AetherRankingsStorage;
 import com.gildedgames.aether.core.capability.interfaces.*;
 
 import net.minecraft.entity.Entity;
@@ -40,6 +43,9 @@ public class AetherCapabilities
 	@CapabilityInject(IAetherPlayer.class)
 	public static final Capability<IAetherPlayer> AETHER_PLAYER_CAPABILITY = null;
 
+	@CapabilityInject(IAetherRankings.class)
+	public static final Capability<IAetherRankings> AETHER_RANKINGS_CAPABILITY = null;
+
 	@CapabilityInject(IPhoenixArrow.class)
 	public static final Capability<IPhoenixArrow> PHOENIX_ARROW_CAPABILITY = null;
 
@@ -52,6 +58,7 @@ public class AetherCapabilities
 	public static void register() {
 		CapabilityManager.INSTANCE.register(ICapeEntity.class, new CapeEntityStorage(), () -> null);
 		CapabilityManager.INSTANCE.register(IAetherPlayer.class, new AetherPlayerStorage(), () -> null);
+		CapabilityManager.INSTANCE.register(IAetherRankings.class, new AetherRankingsStorage(), () -> null);
 		CapabilityManager.INSTANCE.register(IPhoenixArrow.class, new PhoenixArrowStorage(), () -> null);
 		CapabilityManager.INSTANCE.register(ILightningTracker.class, new LightningTrackerStorage(), () -> null);
 		CapabilityManager.INSTANCE.register(IEternalDay.class, new EternalDayStorage(), () -> null);
@@ -66,6 +73,7 @@ public class AetherCapabilities
 				event.addCapability(new ResourceLocation(Aether.MODID, "cape_entity"), new CapeEntityProvider(new CapeEntity((LivingEntity) event.getObject())));
 				if (event.getObject() instanceof PlayerEntity) {
 					event.addCapability(new ResourceLocation(Aether.MODID, "aether_player"), new AetherPlayerProvider(new AetherPlayer((PlayerEntity) event.getObject())));
+					event.addCapability(new ResourceLocation(Aether.MODID, "aether_rankings"), new AetherRankingsProvider(new AetherRankings((PlayerEntity) event.getObject())));
 				}
 			}
 			if (event.getObject() instanceof AbstractArrowEntity) {
