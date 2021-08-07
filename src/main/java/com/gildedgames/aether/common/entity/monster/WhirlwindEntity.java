@@ -2,7 +2,7 @@ package com.gildedgames.aether.common.entity.monster;
 
 import com.gildedgames.aether.common.registry.AetherBlocks;
 import com.gildedgames.aether.client.registry.AetherParticleTypes;
-import com.gildedgames.aether.core.capability.interfaces.IAetherRankings;
+import com.gildedgames.aether.core.registry.AetherPlayerRankings;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.*;
@@ -204,8 +204,7 @@ public class WhirlwindEntity extends MobEntity {
     @Override
     public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
-        IAetherRankings rankings = IAetherRankings.get(player).orElse(null);
-        if (heldItem.getItem() instanceof DyeItem && !rankings.getRanksOf(player.getUUID()).isEmpty()) {
+        if (heldItem.getItem() instanceof DyeItem && !AetherPlayerRankings.getRanksOf(player.getUUID()).isEmpty()) {
             this.setColorData(((DyeItem) heldItem.getItem()).getDyeColor().getColorValue());
 
             return ActionResultType.SUCCESS;

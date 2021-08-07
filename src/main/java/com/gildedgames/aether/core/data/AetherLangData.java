@@ -53,6 +53,14 @@ public class AetherLangData extends LanguageProvider
         add("gui.aether." + key, name);
     }
 
+    public void addCustomizationText(String key, String name) {
+        addGuiText("customization." + key, name);
+    }
+
+    public void addPerksText(String key, String name) {
+        addGuiText("perks." + key, name);
+    }
+
     public void addMenuText(String key, String name) {
         addGuiText("menu." + key, name);
     }
@@ -595,6 +603,13 @@ public class AetherLangData extends LanguageProvider
         addGuiText("pro_tip", "Pro Tip:");
         addGuiText("ascending", "Ascending to the Aether");
         addGuiText("descending", "Descending from the Aether");
+
+
+        addGuiText("accessories.perks_button", "Customization & Perks");
+
+        addCustomizationText("title", "Customization & Perks");
+        addCustomizationText("gloves.skin", "Glove Layer: Skin");
+        addCustomizationText("gloves.hat", "Glove Layer: Hat");
 
 
         addLoreBookText("previous", "Prev.");

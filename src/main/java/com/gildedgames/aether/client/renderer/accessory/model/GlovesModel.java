@@ -1,6 +1,7 @@
 package com.gildedgames.aether.client.renderer.accessory.model;
 
 import com.gildedgames.aether.common.item.accessories.gloves.LeatherGlovesItem;
+import com.gildedgames.aether.core.capability.interfaces.IAetherRankings;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -92,8 +93,8 @@ public class GlovesModel extends BipedModel<LivingEntity>
             this.swimAmount = 0.0F;
             this.setupAnim(player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 
-            //TODO: toggle.
-            boolean isSleeve = false;
+            IAetherRankings aetherRankings = IAetherRankings.get(player).orElse(null);
+            boolean isSleeve = aetherRankings.areHatGloves();
 
             float red = 1.0F;
             float green = 1.0F;

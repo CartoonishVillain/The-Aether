@@ -1,6 +1,7 @@
 package com.gildedgames.aether.client.gui.screen.inventory;
 
 import com.gildedgames.aether.Aether;
+import com.gildedgames.aether.client.gui.screen.perks.CustomizationScreen;
 import com.gildedgames.aether.client.registry.AetherKeys;
 import com.gildedgames.aether.common.inventory.container.AccessoriesContainer;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -49,9 +51,11 @@ public class AccessoriesScreen extends ContainerScreen<AccessoriesContainer> imp
     @Override
     public void init() {
         super.init();
-        if (this.minecraft != null) {
-            this.updateRenderButtons();
-        }
+        this.updateRenderButtons();
+        this.addButton(new Button(this.leftPos - 22, this.topPos + 2, 20, 20, new StringTextComponent("?"),
+                (pressed) -> this.minecraft.setScreen(new CustomizationScreen(this)),
+                (button, matrixStack, x, y) -> this.renderTooltip(matrixStack, new TranslationTextComponent("gui.aether.accessories.perks_button"), x, y))
+        );
     }
 
     public void updateRenderButtons() {

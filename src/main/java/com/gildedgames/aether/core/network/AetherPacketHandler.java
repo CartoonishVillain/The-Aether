@@ -29,6 +29,7 @@ public class AetherPacketHandler
 	public static synchronized void register() {
 		// CLIENT
 		register(AetherTimePacket.class, AetherTimePacket::decode);
+		register(CGloveLayerPacket.class, CGloveLayerPacket::decode);
 		register(CheckTimePacket.class, CheckTimePacket::decode);
 		register(CloudMinionPacket.class, CloudMinionPacket::decode);
 		register(CloudParticlePacket.class, CloudParticlePacket::decode);
@@ -58,6 +59,7 @@ public class AetherPacketHandler
 		register(MovementPacket.class, MovementPacket::decode);
 		register(OpenAccessoriesPacket.class, OpenAccessoriesPacket::decode);
 		register(OpenInventoryPacket.class, OpenInventoryPacket::decode);
+		register(SGloveLayerPacket.class, SGloveLayerPacket::decode);
 	}
 
 	private static <MSG extends AetherPacket> void register(final Class<MSG> packet, Function<PacketBuffer, MSG> decoder) {
