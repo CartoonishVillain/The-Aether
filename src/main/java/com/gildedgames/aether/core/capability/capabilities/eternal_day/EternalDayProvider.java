@@ -19,12 +19,12 @@ public class EternalDayProvider implements ICapabilityProvider, INBTSerializable
 
     @Override
     public CompoundNBT serializeNBT() {
-        return eternalDay.serializeNBT();
+        return this.eternalDay.serializeNBT();
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        eternalDay.deserializeNBT(nbt);
+        this.eternalDay.deserializeNBT(nbt);
     }
 
     @SuppressWarnings("unchecked")

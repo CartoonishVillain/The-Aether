@@ -20,12 +20,12 @@ public class AetherPlayerProvider implements ICapabilityProvider, INBTSerializab
 	
 	@Override
 	public CompoundNBT serializeNBT() {
-		return aetherPlayer.serializeNBT();
+		return this.aetherPlayer.serializeNBT();
 	}
 
 	@Override
 	public void deserializeNBT(CompoundNBT nbt) {
-		aetherPlayer.deserializeNBT(nbt);
+		this.aetherPlayer.deserializeNBT(nbt);
 	}
 	
 	@SuppressWarnings("unchecked")
