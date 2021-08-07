@@ -96,19 +96,19 @@ jobs:
             "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}/reinstall" \
             -H "Authorization: Bearer ${DEPLOY_KEY}")
             
-            echo $REINSTALL_RESPONSE
-
             if [[ $REINSTALL_RESPONSE == 204 ]]; then
-              while [[ $(curl -s "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}" -H "Authorization: Bearer ${DEPLOY_KEY}" | jq '.attributes | .status') == "null" ]]; do
+              echo "Server reinstallation has started."
+              
+              while [[ $(curl -s "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}" -H "Authorization: Bearer ${DEPLOY_KEY}" | jq '.attributes | .status') != "null" ]]; do
                 echo "Waiting for installation..."
                 sleep 10
               done
 
               echo "Sending start signal to server."
 
-              SERVER_ID=$(curl -s "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}" -H "Authorization: Bearer ${DEPLOY_KEY}" | jq '.attributes | .identifier')
-              echo "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}/power"
-              START_RESPONSE=$(curl -X POST "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}/power" \
+              SERVER_ID=$(curl -s "${DEPLOY_LOCATION}/api/application/servers/${INSTANCE_NUMBER}" -H "Authorization: Bearer ${DEPLOY_KEY}" | jq -r '.attributes | .identifier')
+              
+              START_RESPONSE=$(curl -s -X POST "${DEPLOY_LOCATION}/api/client/servers/${SERVER_ID}/power" \
                 -H "Accept: application/json" \
                 -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${USER_KEY}" \
@@ -117,7 +117,8 @@ jobs:
               if [[ $START_RESPONSE == 204 ]]; then
                 echo "Server received start signal."
               else
-                echo "Received ${START_RESPONSE}: Server start unsucessful."
+                echo "Server start unsucessful. Response: ${START_RESPONSE}"
+                exit 1
               fi
             else
               echo "Received ${REINSTALL_RESPONSE}: Reinstall unsucessful."
