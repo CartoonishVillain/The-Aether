@@ -97,14 +97,26 @@ public class Aether
 			register.register(modEventBus);
 		}
 
+		AetherLoot.init();
+		AetherAdvancements.init();
+
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AetherConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, AetherConfig.CLIENT_SPEC);
 	}
 
 	public void commonSetup(FMLCommonSetupEvent event) {
 		AetherCapabilities.register();
+		AetherPacketHandler.register();
+
+
+
+		AetherFeatures.registerConfiguredFeatures();
+
+		AetherStructures.registerStructures();
+		AetherStructures.registerConfiguredStructures();
+
+
 		event.enqueueWork(() -> {
-			AetherPacketHandler.register();
 
 			AetherBlocks.registerPots();
 			AetherBlocks.registerAxeStrippingBlocks();
@@ -116,14 +128,6 @@ public class Aether
 			AetherEntityTypes.registerSpawnPlacements();
 
 			AetherItems.registerAbilities();
-
-			AetherLoot.load();
-
-			AetherFeatures.registerConfiguredFeatures();
-			AetherAdvancements.init();
-
-			AetherStructures.registerStructures();
-			AetherStructures.registerConfiguredStructures();
 
 			registerDispenserBehaviors();
 			registerComposting();
