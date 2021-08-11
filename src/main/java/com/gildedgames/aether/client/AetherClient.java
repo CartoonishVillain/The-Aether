@@ -3,7 +3,8 @@ package com.gildedgames.aether.client;
 import com.gildedgames.aether.client.registry.AetherAtlases;
 import com.gildedgames.aether.client.registry.AetherKeys;
 import com.gildedgames.aether.client.renderer.accessory.layer.RepulsionShieldLayer;
-import com.gildedgames.aether.client.renderer.perk.layer.DevGlowLayer;
+import com.gildedgames.aether.client.renderer.perk.layer.DeveloperGlowLayer;
+import com.gildedgames.aether.client.renderer.perk.layer.PlayerHaloLayer;
 import com.gildedgames.aether.client.world.AetherSkyRenderInfo;
 import com.gildedgames.aether.client.renderer.player.layer.EnchantedDartLayer;
 import com.gildedgames.aether.client.renderer.player.layer.GoldenDartLayer;
@@ -12,11 +13,14 @@ import com.gildedgames.aether.common.registry.AetherDimensions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.Map;
 
 public class AetherClient
 {
@@ -44,13 +48,18 @@ public class AetherClient
 
     public static void clientComplete(FMLLoadCompleteEvent event) {
         event.enqueueWork(() -> {
-            for (PlayerRenderer render : Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().values()) {
+            Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
+            PlayerRenderer defaultRenderer = skinMap.get("default");
+            PlayerRenderer slimRenderer = skinMap.get("slim");
+            for (PlayerRenderer render : skinMap.values()) {
+                render.addLayer(new PlayerHaloLayer<>(render));
                 render.addLayer(new RepulsionShieldLayer<>(render, new BipedModel(1.1F)));
-                render.addLayer(new DevGlowLayer<>(render, new BipedModel(1.05F)));
                 render.addLayer(new GoldenDartLayer<>(render));
                 render.addLayer(new PoisonDartLayer<>(render));
                 render.addLayer(new EnchantedDartLayer<>(render));
             }
+            defaultRenderer.addLayer(new DeveloperGlowLayer<>(defaultRenderer, new PlayerModel<>(0.1F, false)));
+            slimRenderer.addLayer(new DeveloperGlowLayer<>(slimRenderer, new PlayerModel<>(0.1F, true)));
         });
     }
 }
