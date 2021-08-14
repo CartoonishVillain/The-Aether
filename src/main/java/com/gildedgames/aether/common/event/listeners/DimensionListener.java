@@ -118,7 +118,7 @@ public class DimensionListener
             ServerWorld world = (ServerWorld) event.getWorld();
             MinecraftServer server = world.getServer();
             for (ServerWorld serverworld : server.getAllLevels()) {
-                serverworld.setDayTime(0);
+                serverworld.setDayTime(serverworld.getDayTime() + 24000L - (serverworld.getDayTime() + 24000L) % 24000);
             }
         }
     }
